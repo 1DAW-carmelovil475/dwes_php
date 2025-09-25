@@ -31,12 +31,14 @@ function getTableroMArkup ($tablero){
 //fuego
 //tierra
 // hierba
+
 function leerArchivoCSV($archivoCSV) {
     $tablero = [];
 
     if (($puntero = fopen($archivoCSV, "r")) !== FALSE) {
         while (($datosFila = fgetcsv($puntero)) !== FALSE) {
             $tablero[] = $datosFila;
+      
         }
         fclose($puntero);
     }
@@ -49,8 +51,8 @@ $tablero = leerArchivoCSV('contenido_tablero/contenido.csv');
 //Lógica de presentación
 $tableroMarkup = getTableroMArkup($tablero);
 
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,8 +66,8 @@ $tableroMarkup = getTableroMArkup($tablero);
             border-radius: 5px;
             border: solid 2px grey;
             box-shadow: grey;
-            grid-template-columns: repeat (12, 1fr);
-            grid-template-rows: repeat (12, 1fr);
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(12, 1fr);
             
         }
         .tile {
