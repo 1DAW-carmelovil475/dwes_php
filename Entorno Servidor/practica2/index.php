@@ -1,64 +1,97 @@
 <?php
-//Inicialización entorno
+
+/* Inicialización del entorno */
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
-
-//Lógica de negocio
-//Definición o carga de funciones
-//Función de debugueo
+/* Zona de declaración de funciones */
+//Funciones de debugueo
 function dump($var){
     echo '<pre>'.print_r($var,1).'</pre>';
 }
 
-
-function getTablero ($hori, $vert){
-    $tableroOutput = '';
-    for($i=0 ; $i < $hori ; $i++){
-        $tableroOutput .= '<canvas width = "100" height = "100" style="border:1px solid #000000';
-        $tableroOutput .= '</canvas>';
+//Función lógica presentación
+function getTableroMArkup ($tablero){
+    $output = '';
+    //dump($tablero);
+    foreach ($tablero as $filaIndex => $datosFila) {
+        foreach ($datosFila as $columnaIndex => $tileType) {
+            //dump($tileType);
+            $output .= '<div class = "tile ' . $tileType . '"></div>';
+        }
     }
-    
-}
 
-function getTableroMarkup($tableroData){
-    
-    
+    return $output;
 
 }
+//Lógica de negocio
+//El tablero es un array bidimensional en el que cada fila contiene 12 palabras cuyos valores pueden ser:
+// agua
+//fuego
+//tierra
+// hierba
+function leerArchivoCSV($archivoCSV) {
+    $tablero = [];
 
-//Cargamos datos
-$tablero = array(
-   0 => array (
+    if (($puntero = fopen($archivoCSV, "r")) !== FALSE) {
+        while (($datosFila = fgetcsv($puntero)) !== FALSE) {
+            $tablero[] = $datosFila;
+        }
+        fclose($puntero);
+    }
 
-   )
-);
+    return $tablero;
+}
 
-$tableroMarkup = getTableroMarkup($tablero);
+$tablero = leerArchivoCSV('contenido_tablero/contenido.csv');
+
+//Lógica de presentación
+$tableroMarkup = getTableroMArkup($tablero);
+
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
-<!-- <head>
-    Minified version 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-</head> -->
+    <style>
+        .contenedorTablero {
+            width: 600px;
+            height: 600px;
+            border-radius: 5px;
+            border: solid 2px grey;
+            box-shadow: grey;
+        }
+        .tile {
+            width: 50px;
+            height: 50px;
+            float: left;
+            margin: 0;
+            padding: 0;
+            border-width: 0;
+
+        }
+        .fuego {
+            background-color: red;
+        }
+        .tierra {
+            background-color: brown;
+        }
+        .agua {
+            background-color: blue;
+        }
+        .hierba {
+            background-color: green;
+        }
+    </style>
+</head>
 <body>
-    <h1>Tablero</h1>
-    <canvas id="myCanvas" width="100" height="100" style="border:1px solid #000000;">
-    Your browser does not support the HTML canvas tag.
-    </canvas>
-    <canvas id="myCanvas" width="100" height="100" style="border:1px solid #000000;">
-    Your browser does not support the HTML canvas tag.
-    </canvas>
-    <?php
-    echo getTablero(12,12)
-    ?>
-    
+    <h1>Tablero juego super rol DWES</h1>
+    <div class="contenedorTablero">
+        <?php echo $tableroMarkup; ?>
+    </div>
 </body>
 </html>
