@@ -12,8 +12,18 @@ function dump($var){
 }
 
 
+$fila = $_GET ['fila'];
+$col = $_GET ['col'];
+$personaje = null;
 
-$personaje = rand (0,143);
+if((isset($_GET ['fila']) &&  isset($_GET ['col'])) && (($_GET ['fila'] > 0) && $_GET ['col'] > 0) && (($_GET ['fila'] < 13) && $_GET ['col'] < 13)){
+    $fila = $_GET ['fila'];
+    $col = $_GET ['col'];
+
+    $personaje = ($fila*12-12) + $col;
+
+}
+
 
 //Función lógica presentación
 function getTableroMArkup ($tablero, $personaje){
@@ -47,6 +57,15 @@ function getTableroMArkup ($tablero, $personaje){
 //tierra
 // hierba
 
+function getDevolver ($personaje){
+    if(isset($personaje)){
+        return ' ';
+    }else{
+        return "<h2>Posiciones inválidas</h2>";
+    }
+ 
+}   
+
 function leerArchivoCSV($archivoCSV) {
     $tablero = [];
 
@@ -67,6 +86,7 @@ $tablero = leerArchivoCSV('contenido_tablero/contenido.csv');
 
 //Lógica de presentación
 $tableroMarkup = getTableroMArkup($tablero, $personaje);
+$posicionInvalida = getDevolver ($personaje);
 
 ?>
 
@@ -75,7 +95,9 @@ $tableroMarkup = getTableroMArkup($tablero, $personaje);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Document</title>
+    
     <style>
         .contenedorTablero {
             width: 600px;
@@ -118,9 +140,13 @@ $tableroMarkup = getTableroMArkup($tablero, $personaje);
     </style>
 </head>
 <body>
-    <h1>Tablero juego super rol DWES</h1>
+    <h1>Tablero juego super rol DWES introduciendo posicion</h1>
     <div class="contenedorTablero">
         <?php echo $tableroMarkup; ?>
     </div>
+    <br>
+    <div>
+        <?php echo $posicionInvalida; ?>
+    </div>    
 </body>
 </html>
